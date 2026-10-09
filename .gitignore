@@ -1,0 +1,5 @@
+# Excluded from the upload
+cred.txt
+Source/vendor/
+Source/.env
+node_modules/

