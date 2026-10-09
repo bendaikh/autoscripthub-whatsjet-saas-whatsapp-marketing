@@ -59,12 +59,53 @@ class Security
     }
 
     /**
+     * Unique per-server form keys, created on first use.
+     *
+     * The values in tech-config.php are a shared placeholder. Prefer the
+     * key pair in storage/app/form-encryption-keys.php.
+     *
+     * @param  string  $field  passphrase, public_key, or private_key
+     * @return string|null
+     *------------------------------------------------------------------------ */
+    protected function installedFormKey($field)
+    {
+        static $loaded = false;
+        static $keys = null;
+
+        if (! $loaded) {
+            $loaded = true;
+            $helper = app_path('Yantrana/Support/form-encryption-keys.php');
+            if (is_file($helper)) {
+                require_once $helper;
+                if (function_exists('whatsjetEnsureFormEncryptionKeys')) {
+                    try {
+                        $keys = whatsjetEnsureFormEncryptionKeys(false);
+                    } catch (\Throwable $exception) {
+                        $keys = null;
+                    }
+                }
+            }
+        }
+
+        if (is_array($keys) && ! empty($keys[$field])) {
+            return $keys[$field];
+        }
+
+        return null;
+    }
+
+    /**
      * Get RSA passphrse/password.
      *
      * @return string
      *------------------------------------------------------------------------ */
     protected function getRsaPassphrse()
     {
+        $installed = $this->installedFormKey('passphrase');
+        if ($installed) {
+            return $installed;
+        }
+
         return config(
             '__tech.form_encryption.default_rsa_passphrase',
             config('tech-config.form_encryption.default_rsa_passphrase')
@@ -78,6 +119,11 @@ class Security
      *------------------------------------------------------------------------ */
     public function getPublicRsaKey()
     {
+        $installed = $this->installedFormKey('public_key');
+        if ($installed) {
+            return $installed;
+        }
+
         return config(
             '__tech.form_encryption.default_rsa_public_key',
             config('tech-config.form_encryption.default_rsa_public_key')
@@ -91,6 +137,11 @@ class Security
      *------------------------------------------------------------------------ */
     protected function getPrivateRsaKey()
     {
+        $installed = $this->installedFormKey('private_key');
+        if ($installed) {
+            return $installed;
+        }
+
         return config(
             '__tech.form_encryption.default_rsa_private_key',
             config('tech-config.form_encryption.default_rsa_private_key')

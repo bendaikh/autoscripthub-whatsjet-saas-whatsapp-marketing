@@ -2,4 +2,6 @@
 cred.txt
 Source/vendor/
 Source/.env
+Source/composer.phar
+Source/storage/app/form-encryption-keys.php
 node_modules/

@@ -49,17 +49,27 @@ return [
         8 => 'llll',     //moment().format('llll'); // Wed, May 20, 2015 3:35 PM
     ],
 
-    /* Security configurations for encrypting/decrypting form values
-     * one can generate these keys using like given in below example:
-
-        $ openssl genrsa -out rsa_1024_priv.pem 1024
-        $ openssl rsa -pubout -in rsa_1024_priv.pem -out rsa_1024_pub.pem
-
-        ---------- OR ------------
-
-        $ openssl genrsa -out rsa_aes256_priv.pem -aes256
-        $ openssl rsa -pubout -in rsa_aes256_priv.pem -out rsa_aes256_pub.pem
-
+    /* Security configurations for encrypting/decrypting form values.
+     *
+     * The keys below are a shared placeholder that ships with the package.
+     * Do not deploy with them. Each server must use its own key pair.
+     *
+     * A unique pair is written automatically to
+     * storage/app/form-encryption-keys.php (not in git) on the first run,
+     * and by `php install.php`. To rotate the key on a server that is
+     * already installed, run:
+     *
+     *     php scripts/regenerate-form-keys.php
+     *
+     * That command replaces only the file above. It does not write a new
+     * private key into this file. Regenerating logs everyone out of
+     * in-progress forms; ask people to reload the page.
+     *
+     * Manual openssl equivalent (1024-bit, to match the browser form crypto):
+     *
+     *     openssl genrsa -aes256 -out rsa_1024_priv.pem 1024
+     *     openssl rsa -pubout -in rsa_1024_priv.pem -out rsa_1024_pub.pem
+     *
     ------------------------------------------------------------------------- */
     'form_encryption' => [
 

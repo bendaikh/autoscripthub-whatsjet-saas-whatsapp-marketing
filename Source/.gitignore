@@ -4,7 +4,9 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage/app/form-encryption-keys.php
 /vendor
+/composer.phar
 .env
 .env.backup
 .env.production
