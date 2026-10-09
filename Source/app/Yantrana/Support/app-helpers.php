@@ -492,28 +492,45 @@ if (! function_exists('getAppSettings')) {
 
         $appSettings = [];
         $exceptItems = config('__settings.autoload_exceptions', []);
-        if (!empty($exceptItems) and $itemName and in_array($itemName, $exceptItems)) {
-            $configurationSetting = \App\Yantrana\Components\Configuration\Models\ConfigurationModel::where('name', $itemName)->select('name', 'value', 'data_type')->first();
-            if (!__isEmpty($configurationSetting)) {
-                $appSettings[$configurationSetting->name] = $configurationSetting->value;
-            }
-            $storeConfiguration = $appSettings;
-        } else {
-            $storeConfiguration = viaFlashCache('app_setting_all', function () use (&$appSettings, &$exceptItems) {
-                $configurationSettings = \App\Yantrana\Components\Configuration\Models\ConfigurationModel::select('name', 'value', 'data_type');
-                if (!empty($exceptItems)) {
-                    $configurationSettings->whereNotIn('name', $exceptItems);
+        $storeConfiguration = [];
+        try {
+            if (!empty($exceptItems) and $itemName and in_array($itemName, $exceptItems)) {
+                $configurationSetting = \App\Yantrana\Components\Configuration\Models\ConfigurationModel::where('name', $itemName)->select('name', 'value', 'data_type')->first();
+                if (!__isEmpty($configurationSetting)) {
+                    $appSettings[$configurationSetting->name] = $configurationSetting->value;
                 }
-                $configurationSettings = $configurationSettings->get();
-                // check if configuration settings exists in db
-                if (! __isEmpty($configurationSettings)) {
-                    foreach ($configurationSettings as $configurationSetting) {
-                        $appSettings[$configurationSetting->name] = $configurationSetting->value;
+                $storeConfiguration = $appSettings;
+            } else {
+                $storeConfiguration = viaFlashCache('app_setting_all', function () use (&$appSettings, &$exceptItems) {
+                    $configurationSettings = \App\Yantrana\Components\Configuration\Models\ConfigurationModel::select('name', 'value', 'data_type');
+                    if (!empty($exceptItems)) {
+                        $configurationSettings->whereNotIn('name', $exceptItems);
                     }
-                }
-                unset($configurationSettings);
-                return $appSettings;
-            });
+                    $configurationSettings = $configurationSettings->get();
+                    // check if configuration settings exists in db
+                    if (! __isEmpty($configurationSettings)) {
+                        foreach ($configurationSettings as $configurationSetting) {
+                            $appSettings[$configurationSetting->name] = $configurationSetting->value;
+                        }
+                    }
+                    unset($configurationSettings);
+                    return $appSettings;
+                });
+            }
+        } catch (\Illuminate\Database\QueryException|\PDOException $exception) {
+            // First install: no database, no tables yet, or the server is down.
+            // Other query errors still surface. Defaults in config/__settings.php apply until then.
+            $driverCode = (int) ($exception->errorInfo[1] ?? 0);
+            $message = $exception->getMessage();
+            $databaseNotReady = in_array($driverCode, [1044, 1045, 1049, 1146, 2002, 2003, 2006], true)
+                || str_contains($message, 'Base table or view not found')
+                || str_contains($message, 'Connection refused')
+                || str_contains($message, 'could not find driver')
+                || str_contains($message, 'getaddrinfo');
+            if (! $databaseNotReady) {
+                throw $exception;
+            }
+            $storeConfiguration = [];
         }
         // Fetch default setting
         // Vinod- 06 JAN 2024 - this is weird but there was issues for addons app items so we have to check if configuration is cached or not
